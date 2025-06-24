@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, ScrollView, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
-import { RouteProp, useRoute } from '@react-navigation/native';
+import { useNavigation, RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
 import { Ionicons } from '@expo/vector-icons';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
 
 type DetailRouteProp = RouteProp<RootStackParamList, 'Detail'>;
 
 export default function DetailScreen() {
   const route = useRoute<DetailRouteProp>();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { bookId } = route.params;
 
   const [book, setBook] = useState<any>(null);
@@ -31,17 +34,23 @@ export default function DetailScreen() {
   }, [bookId]);
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#007BFF" />;
+    return <ActivityIndicator size="large" color="#007BFF" style={{ marginTop: 50 }} />;
   }
 
   if (!book) {
-    return <Text>Livro não encontrado.</Text>;
+    return <Text style={{ padding: 20 }}>Livro não encontrado.</Text>;
   }
 
   const info = book.volumeInfo;
 
   return (
     <ScrollView style={styles.container}>
+      {/* Botão de voltar */}
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <Ionicons name="arrow-back" size={24} color="#333" />
+        <Text style={styles.backText}>Voltar</Text>
+      </TouchableOpacity>
+
       {info.imageLinks?.thumbnail && (
         <Image source={{ uri: info.imageLinks.thumbnail }} style={styles.image} />
       )}
@@ -58,35 +67,64 @@ export default function DetailScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { 
-    padding: 16 
+  container: {
+    flex: 1,
+    padding: 0, 
+    backgroundColor: '#f8f9fa',
   },
-  image: { 
-    width: 120, 
-    height: 180, 
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 20,
+    paddingBottom: 10, 
+    backgroundColor: '#ffffff',
+  },
+  backText: {
+    marginLeft: 8,
+    fontSize: 17,
+    fontWeight: '600',
+    color: '#5e60ce', 
+  },
+  image: {
+    width: 150,
+    height: 225,
     alignSelf: 'center',
-    marginBottom: 16 
-},
-  title: { 
-    fontSize: 22, 
-    fontWeight: 'bold', 
-    marginBottom: 8 
-},
-  authors: { 
-    fontStyle: 'italic', 
-    marginBottom: 12 
-},
-  description: { 
-    fontSize: 16, 
-    color: '#333' 
-},
+    marginBottom: 20,
+    borderRadius: 12, 
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#212529',
+    marginBottom: 8,
+    textAlign: 'center',
+    paddingHorizontal: 20,
+  },
+  authors: {
+    fontStyle: 'normal',
+    fontSize: 16,
+    color: '#6c757d',
+    textAlign: 'center',
+    paddingHorizontal: 20,
+  },
+  description: {
+    fontSize: 16,
+    color: '#495057', 
+    lineHeight: 24, 
+    paddingHorizontal: 20,
+    paddingBottom: 30, 
+  },
   favoriteButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 24,
-    padding: 12,
-    backgroundColor: '#f1f1f1',
-    borderRadius: 8,
+    justifyContent: 'center',
+    marginTop: 16,
+    marginBottom: 30,
+    paddingVertical: 14,
+    paddingHorizontal: 24,
+    backgroundColor: '#e9ecef', 
+    borderRadius: 30,
     alignSelf: 'center',
+
   },
 });

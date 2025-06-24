@@ -61,12 +61,6 @@ export default function HomeScreen() {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity
-        style={styles.favButton}
-        onPress={() => navigation.navigate('Favorites')}
-      >
-        <Text style={styles.favButtonText}>❤️ Ver Favoritos</Text>
-      </TouchableOpacity>
 
       {loading ? (
         <ActivityIndicator size="large" color="#007BFF" style={{ marginTop: 20 }} />
